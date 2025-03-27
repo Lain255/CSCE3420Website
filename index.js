@@ -150,19 +150,117 @@ let disableNyanInterval = () => {
     }
 }
 
+let timeToSleep
+let sleepTimerDuration = 30*1000
 let sleepTimer
 let resetSleepTimer = () => {
+    timeToSleep = Date.now() + sleepTimerDuration
     if (sleepTimer) {
         clearTimeout(sleepTimer)
     }
     sleepTimer = setTimeout(() => {
         if (document.getElementById("cat-select").value !== "sleepyCat") {
-            addMessage("It looks like the cat fell asleep. Try being more engaging.", "System", "system")
+            addMessage(youInJail? "The cat rests easy knowing its safe from you." :"It looks like the cat fell asleep. Try being more engaging.", "System", "system")
             changeCat("sleepyCat")
         }
         resetSleepTimer()
-    }, 30*1000)
+    }, sleepTimerDuration)
 }
+
+let petMeter = 0
+let onPet = (amount) => {
+    petMeter += amount
+    if (petMeter > 100) {
+        if (document.getElementById("cat-select").value === "cat") {
+            addMessage("The cat is enjoying the pets.", "System", "system")
+            changeCat("happyCat")
+        }
+        else if (document.getElementById("cat-select").value === "sleepyCat") {
+            addMessage("You woke up the cat with pets.", "System", "system")
+            changeCat("happyCat")
+        }
+        else if (document.getElementById("cat-select").value === "angeryCat") {
+            addMessage("It looks like you calmed the cat down with pets.", "System", "system")
+            changeCat("cat")
+        }
+        else if (document.getElementById("cat-select").value === "happyCat") {
+            addMessage("The cat has gotten sick of pets and sick of you.", "System", "system")
+            changeCat("angeryCat")
+        }
+        else {
+            petMeter = 100
+        }
+    }
+    
+
+}
+
+let playArrestAudio = () => {
+    let playNext = (jailAudioNum) => {
+        soundPlayer.pause()
+        if(jailAudioNum < 8) {
+            jailAudioNum++
+            soundPlayer = new Audio(`assets/arrested${jailAudioNum}.mp3`)
+            soundPlayer.play()
+            soundPlayer.addEventListener("ended", () => playNext(jailAudioNum))
+        }
+        else {
+            return
+        }
+    }
+    playNext(0)
+}
+
+let smackPlayer = new Audio("assets/hit.mp3")
+let youInJail = false
+let onSmack = () => {
+    if (!youInJail) {
+        console.log("smack")
+        if (document.getElementById("sound-enabled").checked) {
+            smackPlayer.play()
+        }
+        
+        let smackImg = document.createElement("img");
+        smackImg.src = "assets/hit.jpg"
+        imgTop = mouseY - 75
+        imgLeft = mouseX - 75
+        smackImg.style.cssText = `position:fixed; left:${imgLeft}px; top:${imgTop}px; width: 150px; height: auto;`
+        document.getElementById("chatbox").append(smackImg)
+        setTimeout(() => smackImg.remove(), 200)
+    
+        
+        youInJail = true
+        addMessage("You have been arrested for animal abuse. You will be released in 1,000 years.", "System", "system")
+        changeCat("angeryCat")
+
+        if(document.getElementById("sound-enabled").checked) {
+            playArrestAudio()
+        }
+
+        document.getElementById("you-img-name").innerHTML="You in jail"
+        document.getElementById("you-img").src="assets/youInJail.png"
+        document.getElementById("jail-bar-div").style.setProperty("display", "block")
+
+        document.getElementById("cat-select").disabled = true
+        document.getElementById("message").disabled = true
+        document.getElementById("send-message").disabled = true
+
+
+
+
+
+        
+    }
+
+    
+
+    
+
+
+
+}
+
+
 let onSendMessage = (message) => {
     if (message === "") {
         return
@@ -200,12 +298,13 @@ let changeCat = (selection) => {
         disableNyanInterval()
     }
 
-    if (document.getElementById("sound-enabled").checked) {
+    if (document.getElementById("sound-enabled").checked && !youInJail) {
         soundPlayer.src = cats[selection].sound
         soundPlayer.play()
 
     }
     resetSleepTimer()
+    petMeter = 0
 
 
 }
@@ -213,7 +312,10 @@ let changeCat = (selection) => {
 
 
 let onSoundEnabled = (enabled) => {
-    if (enabled) {
+    if (enabled && youInJail) {
+        playArrestAudio()
+    }
+    else if (enabled) {
         soundPlayer.src = cats[document.getElementById("cat-select").value].sound
         soundPlayer.play()
     }
@@ -222,11 +324,33 @@ let onSoundEnabled = (enabled) => {
     }
 }
 
+let mouseX
+let mouseY
+let updateBarsInterval
 window.addEventListener('DOMContentLoaded', function() {
     resetSleepTimer()
-    document.getElementById("send-message").addEventListener("click", () => onSendMessage(document.getElementById("message").value))
-    document.addEventListener("keydown", (event) => event.key === "Enter" ? onSendMessage(document.getElementById("message").value) : undefined)
-    document.getElementById("cat-select").addEventListener("change", () => onChangeSelection(document.getElementById("cat-select").value))
+    selectedCat = document.getElementById("cat-select")
+    
+    document.getElementById("send-message").addEventListener("click", () => youInJail ? undefined : onSendMessage(document.getElementById("message").value))
+    document.addEventListener("keydown", (event) => event.key === "Enter" && !youInJail ? onSendMessage(document.getElementById("message").value) : undefined)
+    document.getElementById("cat-select").addEventListener("change", () => youInJail ? undefined : onChangeSelection(document.getElementById("cat-select").value))
     document.getElementById("sound-enabled").addEventListener("change", () => onSoundEnabled(document.getElementById("sound-enabled").checked))
+    let img = document.getElementById("cat-img")
+    document.addEventListener("mousemove", (event) => {
+        if (img.matches(':hover') && !youInJail) {
+            mouseX = event.clientX
+            mouseY = event.clientY
+            onPet(Math.min(Math.sqrt(event.movementX * event.movementX + event.movementY * event.movementY), 2) / 50)
+        }
+    })
+    document.getElementById("cat-img").addEventListener("click", youInJail ? undefined : onSmack)
+
+    let sleepBar = document.getElementById("sleep-bar")
+    let petBar = document.getElementById("pet-bar")
+
+    updateBarsInterval = setInterval(() => {
+        sleepBar.value = selectedCat.value !== "sleepyCat" ? 100 * (sleepTimerDuration - timeToSleep + Date.now()) / sleepTimerDuration : 100
+        petBar.value = petMeter
+    }, 100)
 
 });

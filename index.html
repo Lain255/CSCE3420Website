@@ -73,8 +73,13 @@
       </div>
       <div class="row">
         <div class="col-lg-3 align-self-center">
-          <figcaption>You</figcaption>
-          <img src="assets/you.png"/>
+          <figcaption id="you-img-name">You</figcaption>
+          <img id="you-img" src="assets/you.png"/>
+          <div class="bar" id="jail-bar-div" style="display: none;"> 
+            <p>Jail Bar: </p>
+            <progress id="jail-bar" value="0" max="100"></progress>
+          </div>
+
         </div>
         <div class="col-lg-6">
           <div class="chatbox" id="chatbox">
@@ -105,6 +110,17 @@
         <div class="col-lg-3 align-self-center">
           <figcaption id="cat-img-name">Cat</figcaption>
           <img id="cat-img" src="assets/cat.png"/>
+          <div class="bar"> 
+            <p>Sleep Bar: </p>
+            <progress id="sleep-bar" value="0" max="100"></progress>
+          </div>
+          <div class="bar"> 
+            <p>Pet Bar: </p>
+            <progress id="pet-bar" value="0" max="100"></progress>
+          </div>
+
+          
+
         </div>
       </div>
     </div>
@@ -169,4 +185,8 @@
     width: 100%;
     height: auto;
   }
+  div.bar p {
+    margin: 1rem 0 0 0;
+  }
+
 </style>
