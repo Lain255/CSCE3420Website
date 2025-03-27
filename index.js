@@ -65,7 +65,7 @@ let cats = {
         
             let response = "Z" + "z".repeat(sleepCounter)
             sleepCounter -= 1
-            if (sleepCounter < 0) {
+            if (sleepCounter <= 0) {
                 let choice = Math.floor(Math.random()*3)
                 if (choice === 0) {
                     addMessage("Uh oh, you woke up the cat! Its in a bad mood!", "System", "system")
@@ -340,7 +340,7 @@ window.addEventListener('DOMContentLoaded', function() {
         if (img.matches(':hover') && !youInJail) {
             mouseX = event.clientX
             mouseY = event.clientY
-            onPet(Math.min(Math.sqrt(event.movementX * event.movementX + event.movementY * event.movementY), 2) / 50)
+            onPet(Math.min(Math.sqrt(event.movementX * event.movementX + event.movementY * event.movementY), 10) / 20)
         }
     })
     document.getElementById("cat-img").addEventListener("click", youInJail ? undefined : onSmack)
@@ -349,7 +349,9 @@ window.addEventListener('DOMContentLoaded', function() {
     let petBar = document.getElementById("pet-bar")
 
     updateBarsInterval = setInterval(() => {
-        sleepBar.value = selectedCat.value !== "sleepyCat" ? 100 * (sleepTimerDuration - timeToSleep + Date.now()) / sleepTimerDuration : 100
+        sleepBar.value = selectedCat.value !== "sleepyCat" ? 
+        100 * (sleepTimerDuration - timeToSleep + Date.now()) / sleepTimerDuration 
+        : 100* sleepCounter/sleepCounterStart
         petBar.value = petMeter
     }, 100)
 
