@@ -1,10 +1,168 @@
-<!DOCTYPE html>
-<html>
-<body>
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <script src="./index.js"></script>
+    <script src="./color-modes.js"></script>
 
-<h1>James Heath</h1>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta
+      name="author"
+      content="Mark Otto, Jacob Thornton, and Bootstrap contributors, and James Heath"
+    />
+    <meta name="generator" content="Hugo 0.122.0" />
+    <title>Cat-GPT</title>
 
-<p>for my class</p>
+    <link
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="favicon.ico">
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Cat-GPT</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Features</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Pricing</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3">
+ 
+        </div>
+        <div class="col-lg-6">
+          <p>
+            Due to ground-breaking AI research done by James Heath while
+            slacking of in his CSCE 3420 class, an animal based large language
+            model has been built to emulate responses from the feline family.
+          </p>
+        </div>
+        <div class="col-lg-3">
 
-</body>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 align-self-center">
+          <figcaption>You</figcaption>
+          <img src="assets/you.png"/>
+        </div>
+        <div class="col-lg-6">
+          <div class="chatbox" id="chatbox">
+            <div class="chatbox-header">
+              <span>Select Cat Model:</span>
+              <select name="cat" id="cat-select">
+                <option value="cat">Cat</option>
+                <option value="sleepyCat">Sleepy Cat</option>
+                <option value="angeryCat">Angery Cat</option>
+                <option value="happyCat">Happy Cat</option>
+                <option value="copyCat">Copy Cat</option>
+                <option value="japaneseCat">Japanese Cat</option>
+                <option value="chineseCat">Chinese Cat</option>
+              </select>
+            </div>
+            <div class="chatbox-content" id="chatbox-content">
+              
+            </div>
+            <div class="chatbox-input">
+              <input type="text" id="message" name="message">
+              <button id="send-message">Send</button>
+            </div>
+          </div>
+          <span>Enable sound : </span>
+          <input type="checkbox" id="sound-enabled" name="sound-enabled" value="sound-enabled">
+  
+        </div>
+        <div class="col-lg-3 align-self-center">
+          <figcaption id="cat-img-name">Cat</figcaption>
+          <img id="cat-img" src="assets/cat.png"/>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
+
+
+<style>
+  .chatbox {
+
+  }
+  .chatbox-header {
+    display: flex;
+    justify-content: space-between;
+
+  }
+  .chatbox-content {
+    height: 20rem;
+    overflow-y: auto;
+    background-color: gainsboro;
+
+  }
+
+  .chatbox-content div {
+    display: flex;
+    gap: 0.2rem
+  }
+  .chatbox-content div.cat {
+    background-color: whitesmoke;
+  }
+  
+  .chatbox-content span.sender {
+    width: 7rem;
+    text-align: end;
+  }
+  .chatbox-content span.message {
+    flex: 1 1 0;
+  }
+  .chatbox-content span {
+    color: black;
+  }
+  .chatbox-content span.you {
+    color: blue;
+
+  }
+  .chatbox-content span.cat {
+    color: red;
+
+  }
+
+  .chatbox-input {
+    display: flex;
+  }
+  .chatbox-input input {
+    flex: 1 1 0;
+  }
+  img {
+    width: 100%;
+    height: auto;
+  }
+</style>
